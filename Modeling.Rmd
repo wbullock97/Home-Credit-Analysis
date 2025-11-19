@@ -1,6 +1,6 @@
 ---
 title: "Home Credit EDA and Model Analysis"
-author: "Whitney Bullock, Thomas Beck, and Caleb Call" 
+author: "Whitney Bullock" 
 date: "`r Sys.Date()`"
 output: 
   html_document:
@@ -583,136 +583,12 @@ plot(roc_tree, main = "ROC Curve for Weighted Decision Tree")
 ### Decision Tree Model Analysis 
 With the weighted values assigned to the minority class I achieved a AUC of .6853.  The predictive performance was lower in the decision tree model. That said, there is still very useful information obtained from the model.  In particular it can identify key characteristics to use for identifying high-risk segments such as low external source values, perhaps allowing for automatic rejection values to speed the approval and denial process for Home Credit. 
 
-### Random Forest Model
-
-We will now utilize multiple decision trees through random forests to see if we can improve our models predictions ability. This will reduce over fitting that may have occurred with a single tree by averaging predictions over many trees. This will also reduce the variance that we see. The potential downside of random forest is that it is very difficult to interpret since there are many trees, so we won't know very well what variables contribute to a good prediction.
-
-```{r}
-library(randomForest)
-library(pROC)
-library(ranger)
-```
-
-```{r}
-set.seed(1234)  
-
-# Define predictors
-predictors <- c("EXT_SOURCE_3", "EXT_SOURCE_2", "export_source_1_imputed",
-                "AGE_YEARS", "YEARS_EMPLOYED")
-
-# Build Random Forest model
-rf_model <- ranger(
-  formula = as.formula(paste("TARGET ~", paste(predictors, collapse = "+"))),
-  data = train_data,
-  num.trees = 500,
-  mtry = 3,
-  importance = "impurity",
-  probability = TRUE
-)
-
-# Predict on test data
-rf_pred <- predict(rf_model, data = test_data, type = "response")
-rf_probs <- rf_pred$predictions[, 2]  # fix: take second column
-
-# Evaluate AUC
-roc_obj <- roc(test_data$TARGET, rf_probs)
-auc_val <- auc(roc_obj)
-print(paste("Random Forest AUC:", round(auc_val, 3)))
-
-# Plot ROC curve
-plot(roc_obj, col = "blue", main = paste("ROC Curve - Random Forest (AUC:", round(auc_val, 3), ")"))
-
-
-```
-
-### Random Forest Model Analysis 
-Using 500 trees to create a random forest I achieved an AUC of .65.  The predictive performance was worse than the tree model which we did not expect. This is likely due to the fact that we didn't weight the minority class. This is still not an incredibly strong predictor unfortunately. The ability to understand this model is also difficult since it is averaging predictions from 500 different trees. We will next explore 1 more model through a gradient boosting model.
-
-### Gradient Boosting Model
-
-Unlike Random Forest which builds trees independently, gradient boosting builds upon previous trees that were created. Each new tree will try to correct the errors of the previous tree. This should lead to improved AUC. This model will focus more on those customers who are difficult to understand. Which in this case should be very beneficial to understand who might default.
-
-```{r}
-library(xgboost)
-```
-
-
-```{r}
-set.seed(1234)
-
-#  Separate predictors and target
-predictors <- setdiff(names(train_data), "TARGET")
-
-# Keep only complete cases
-train_complete <- train_data[, c(predictors, "TARGET")]
-train_complete <- na.omit(train_complete)
-
-test_complete <- test_data[, c(predictors, "TARGET")]
-test_complete <- na.omit(test_complete)
-
-# Combine train and test to create consistent dummy variables
-combined <- rbind(train_complete[, predictors], test_complete[, predictors])
-combined_matrix <- model.matrix(~ . -1, data = combined)
-
-# Split back into train/test matrices
-train_matrix <- combined_matrix[1:nrow(train_complete), ]
-test_matrix  <- combined_matrix[(nrow(train_complete)+1):nrow(combined_matrix), ]
-
-#  Convert TARGET to numeric (0/1)
-train_labels_num <- ifelse(train_complete$TARGET == "1", 1, 0)
-test_labels_num  <- ifelse(test_complete$TARGET  == "1", 1, 0)
-
-# Handle class imbalance
-neg <- sum(train_labels_num == 0)
-pos <- sum(train_labels_num == 1)
-scale_pos_weight <- neg / pos
-
-# Create XGBoost DMatrix
-dtrain <- xgb.DMatrix(data = train_matrix, label = train_labels_num)
-dtest  <- xgb.DMatrix(data = test_matrix,  label = test_labels_num)
-
-# Set parameters
-params <- list(
-  objective = "binary:logistic",
-  eval_metric = "auc",
-  eta = 0.1,
-  max_depth = 6,
-  subsample = 0.8,
-  colsample_bytree = 0.8,
-  scale_pos_weight = scale_pos_weight
-)
-
-# Train XGBoost model
-xgb_model <- xgb.train(
-  params = params,
-  data = dtrain,
-  nrounds = 500,
-  watchlist = list(train = dtrain, test = dtest),
-  print_every_n = 50,
-  early_stopping_rounds = 20
-)
-
-# Predict
-xgb_probs <- predict(xgb_model, dtest)
-
-# Evaluate AUC
-library(pROC)
-roc_obj <- roc(test_labels_num, xgb_probs)
-auc_value <- auc(roc_obj)
-print(paste("Gradient Boosting Test AUC:", round(auc_value, 3)))
-
-# Plot ROC
-plot(roc_obj, col = "blue",
-     main = paste("ROC Curve - Gradient Boosting (AUC:", round(auc_value, 3), ")"))
-
-```
-
-The test AUC for this model was .74, which is almost a big increase from the random forest design. This is a good improvement and what we expected to occur given that it will be correcting for errors made as it goes. We still used 500 trees as well. We increased the AUC by .05 from the singular tree model that we previously made as well. This model beats out the AUC scores for all the log models that we created as well. 
-
 ## Conclusion 
 
-Key insights identified through my analysis is that extneral credit scores are the most powerful predictors for loan default risk.  The higher the score, the lower the probability of loan default.  Age and employment duration have smaller but meaningful contributions.  My analysis suggests that older, more experienced customers are slightly less likely to default on the loan. Individual characteristics like gender and income when analyzed in isolation have unreliable predictive power, no better than a 50/50 coin flip.  
+Key insights identified through my analysis is that external credit scores are the most powerful predictors for loan default risk.  The higher the score, the lower the probability of loan default.  Age and employment duration have smaller but meaningful contributions.  My analysis suggests that older, more experienced customers are slightly less likely to default on the loan. Individual characteristics like gender and income when analyzed in isolation have unreliable predictive power, no better than a 50/50 coin flip.  
 
-The log model with more variables showed decent performance for predictive accuracy.  The weighted tree performed slightly below the log model1, but did provide valuable insights in terms of class recognition. The random forest model improved the tree model by averaging predictions for 500 different trees, but still underperformed the log model. The model that gave us the best AUC score was the gradient boosting model which is similar to the random forest model but instead improves upon the errors of the previous trees.
+The log model with more variables showed decent performance for predictive accuracy.  The weighted tree performed slightly below the log model1, but did provide valuable insights in terms of class recognition.  
 
-My recommendation would be to use the gradient boosting model that achieved the highest AUC, which performed quite a bit better than the single tree model or random forest. The accuracy may be lower for this model than using the majority class predictor which produces 92% accuracy of default. The gradient model however provides meaningful predictive power for the minority class, those who will default. We want to get a better understanding of who will default and that is why we suggest using gradient boosting. We hope this model will be able to help Home Credit better target high-risk customers while improving overall approval efficiency.  
+I will continue with other models to see if predictive power can be increased. Looking into models such as random forest or gradient boosted trees to combine interpretability and predictive power. I hope to be able to develop a model that Home Credit can better target high-risk customers while improving overall approval efficiency.  
+
+
