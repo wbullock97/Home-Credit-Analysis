@@ -723,4 +723,5 @@ The submission achieved a Private score of 0.70126 and a Public score of 0.70297
 
 The analysis identified external credit scores as the most robust predictors of default risk. Higher scores strongly correlate with lower risk. Age and employment history provide secondary predictive value, while demographic factors like gender and income show negligible utility in isolation.
 
+
 The Gradient Boosting model (XGBoost) demonstrated superior performance (AUC 0.742) compared to Logistic Regression, Decision Trees, and Random Forests. It is recommended that Home Credit utilize this model to prioritize the riskiest applicants (e.g., the top 10%) for manual review, thereby optimizing resource allocation and minimizing potential defaults.
