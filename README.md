@@ -53,6 +53,8 @@ By accurately predicting customer's likelihood of defaulting on a loan with limi
 
 <img src="https://github.com/wbullock97/Home-Credit-Analysis/blob/main/Images/predictor%20variables.png" alt="Predictor" width="500"/>
 
+<img src="https://github.com/wbullock97/Home-Credit-Analysis/blob/main/Images/gradient%20boost.png" alt="Gradient Boost" width="500"/>
+
 ## 🪨 Difficulties During Project 🪨
 The main difficulty during the project was combatting class imbalance. Only about 8% of the target variable represented loan defaults, which caused the models to be biased toward predicting non-defaulters. To address this challenge the decision tree model weighted the minority class 5:1 during training, helping the model pay more attention to the defaulting class.  Additional, cross-valiation techniques were applied to improve model performance to ensure more robust and generalized predictions. These measures to handle class imbalance highlighted the importances of careful processing, evaluation, and tuning for predictive models.  
 
