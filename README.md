@@ -4,7 +4,7 @@ layout: home
 ---
 
 # Home Credit Project IS-6812 
-This repository contains highlights from our practice capstone project for Home Credit.  The project focused on leveraging machine learning models to solve the real-world business problem for Home Credit.  The project will showcase the complete workflow from understanding the business problem, to completing exploratory data analysis, building of four different predictive models, and evaluating results.  The project demonstrates business value to Home Credit by being able to analyze their incomplete data, draw insights, and produce business use cases to better predict if a customer will default on the loan.  
+This repository contains highlights from the practice capstone project for Home Credit.  The project focused on leveraging machine learning models to solve the real-world business problem for Home Credit.  The project will showcase the complete workflow from understanding the business problem, to completing exploratory data analysis, building of four different predictive models, and evaluating results.  The project demonstrates business value to Home Credit by being able to analyze their incomplete data, draw insights, and produce business use cases to better predict if a customer will default on the loan.  
 
 ---
 ## ⭐ Highlights ⭐
@@ -25,7 +25,7 @@ This repository contains highlights from our practice capstone project for Home 
 Home Credit is a financial services provider specializing in lending to individuals with little or no credit history, empowering them with easy and safe access to financing. It is crucial for Home Credit to accurately assess a customer’s ability to repay in order to identify reliable target customers. By effectively predicting repayment capability, Home Credit can responsibly extend credit to a larger customer base while minimizing financial risk to the company and its investors.
 
 ## 🏳️ Solution to Business Problem 🏳️
-To address Home Credit's need for reliable and responsible lending decisions, our project will develop a machine learning model to use as a risk assessment to predict whether a customer is likely to default on a loan.  By anlayzing various variables provided in the loan-application process the models will quantify the customer's repayment capability when standard credit history is limited. 
+To address Home Credit's need for reliable and responsible lending decisions, the project will develop a machine learning model to use as a risk assessment to predict whether a customer is likely to default on a loan.  By anlayzing various variables provided in the loan-application process the models will quantify the customer's repayment capability when standard credit history is limited. 
 
 ## ▶️ Personal Contribution ▶️
 My personal contributions to the project include 
