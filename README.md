@@ -36,6 +36,8 @@ My personal contributions to the project include
 
 🧍Presentation Slide Deck - Summarized core findings, methodology, and business impacts 
 
+<img src="https://github.com/wbullock97/Home-Credit-Analysis/blob/main/Images/Homecredit%20group.png" alt="HomeCredit" width="300"/>
+
 ## 🥇 Business Value of Solution 🥇
 There are four objectives in the project solution that add value to Home Credit: 
 
@@ -55,5 +57,5 @@ The main difficulty during the project was combatting class imbalance. Only abou
 ## 🧠 Key Takeaways 🧠
 This practice project provided valuable experience for myself and the team to work with real-world data.  It allowed the opporunity to gain key learnings from true data that is messy, missing values, imbalanced, and imperfect.  Working on real world data highlighted the need for data cleaning and the time spent upfront in the process to clean the data and understand the variables will pay dividends later on.  Spending time during the EDA will help identify which features are important and which features just add noise.  By selecting the right features we are able to improve the models learning ability and more accurately predict defaulters. The final takeaway I have from the project is appreciating the iterative process of experimenting with different models and tuning parameters to determine the best-performing solution for the dataset to develop a good model.  
 
-<img src="https://github.com/wbullock97/Home-Credit-Analysis/blob/main/Homecredit%20group.png" alt="HomeCredit" width="300"/>
+
 
