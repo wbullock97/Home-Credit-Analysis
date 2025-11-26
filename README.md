@@ -3,7 +3,7 @@ layout: home
 
 ---
 
-# Project README IS-6812
+# Home Credit Project IS-6812
 This repository contains highlights from our practice capstone project for Home Credit.  The project focused on leveraging machine learning models to solve the real-world business problem for Home Credit.  The project will showcase the complete workflow from understanding the business problem, to completing exploratory data analysis, building of four different predictive models, and evaluating results.  The project demonstrates business value to Home Credit by being able to analyze their incomplete data, draw insights, and produce business use cases to better predict if a customer will default on the loan.  
 
 ---
